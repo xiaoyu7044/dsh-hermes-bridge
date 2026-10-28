@@ -1,13 +1,14 @@
 {
   "name": "dsh-hermes-bridge",
-  "version": "0.5.5",
-  "description": "DeepSeek Harness (DSH) ↔ Hermes Agent bridge: call_hermes tool (local exec or cloud relay) + phone-agent remote executor",
+  "version": "0.6.0",
+  "description": "DeepSeek Harness (DSH) ↔ Hermes Agent bridge: call_hermes (local/relay), phone-agent, hd-events monitoring",
   "type": "module",
   "main": "hermes-bridge.js",
   "files": [
     "hermes-bridge.js",
     "relay.js",
     "phone-agent.js",
+    "hd-events.js",
     "cordis.patch.yml",
     "hermes-bridge.example.json",
     "README.md"
@@ -26,5 +27,8 @@
     "acp",
     "cordis",
     "relay"
-  ]
+  ],
+  "scripts": {
+    "test": "node --test test/hd-events.test.mjs"
+  }
 }

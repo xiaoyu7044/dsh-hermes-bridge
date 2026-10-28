@@ -105,6 +105,15 @@ call_hermes(task: "…", session: "triage")      // 需要 Hermes 侧持久会�
 | 调用立刻返回「执行超时（1s）」 | `timeout_s`（秒）被当成毫秒用 | 已在 0.5.4 修复：`Math.round(secs * 1000)` |
 | `INVALID_REQUEST` 来自工具参数 | DSH 的 `defineTool.parameters` 必须是 `type:'object'` + `properties` + `required:[]` 数组 | 按 JSON Schema 写 |
 
+## hd-events（分支 `hd`）
+
+监控本机 HD 的会话文件，判定「在干活 / 卡住 / 缓过来」，事件走 webhook（HMAC）或 relay 推给你。
+纯空闲不告警。详见 `docs/hd-integration.md`。
+
+```sh
+HD_STALL_MIN=20 HD_HEARTBEAT_MIN=0 dsh --profile <profile>
+```
+
 ## 许可
 
 MIT
