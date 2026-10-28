@@ -1,6 +1,6 @@
 {
   "name": "dsh-hermes-bridge",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "DeepSeek Harness (DSH) ↔ Hermes Agent bridge: call_hermes (local/relay), phone-agent, hd-events monitoring",
   "type": "module",
   "main": "hermes-bridge.js",

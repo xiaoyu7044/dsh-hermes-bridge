@@ -37,10 +37,10 @@
 
 | 分支 | 插件版本 | 内容 |
 |---|---|---|
-| `main` | 0.5.5 | call_hermes（local/relay）+ phone-agent |
-| `hd` | 0.6.0 | 上面全部 + hd-events 会话监控 + ACP 客户端 |
+| `main` | 0.6.x | 全量：call_hermes（local/relay）+ phone-agent + hd-events + ACP 客户端 |
+| `hd` | 跟随 `main` | 同一份代码，留作 HD 相关的开发分支 |
 
-npm 的 `latest` 跟 `hd` 分支走（`npm i dsh-hermes-bridge@0.6.0`）。
+npm 的 `latest` 与 `main` 一致：`npm i dsh-hermes-bridge`。
 
 ## 三步跑起来
 
