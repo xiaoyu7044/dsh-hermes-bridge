@@ -93,6 +93,17 @@ python3 ~/.hermes/relay/dsh_phone.py "只回复三个字：收到了"
 
 relay 侧：`GET /health`、`GET /clients`、`POST /send`、`GET /events`（SSE）。详见 `docs/protocol.md`。
 
+## 发布
+
+```sh
+tools/release.sh patch --dry-run   # 先看计划：自检 + 版本号 + 将执行的动作
+tools/release.sh patch             # 0.6.1 → 0.6.2：自检 → 提交 → tag → push → npm publish → 复验 → 同步 hd
+```
+
+脚本会拦下这些情况：不在 `main`、工作区不干净、npm 未登录、本地落后远端、版本号已在 npm 上存在、
+JS/Python/JSON 检查不过、单测失败、密钥扫描命中。发布后它会等 registry 传播、拉回 tarball 校验内容，
+有 `dsh` 时再在临时 `DSH_HOME` 里装一遍并核对插件注册数。
+
 ## 安全
 
 - **一个 client 一个 token**，按用途拆（执行器 / 调用端 / 手机），任意一把可独立吊销
