@@ -40,8 +40,13 @@ def scan_text(name: str, text: str) -> list[str]:
         if ALLOW.search(line) and not re.search(r"sk-[A-Za-z0-9_\-]{16,}", line):
             continue
         for label, rx in PATTERNS:
-            if rx.search(line):
-                hits.append(f"{name}:{lineno}: {label}: {line.strip()[:120]}")
+            m = rx.search(line)
+            if not m:
+                continue
+            # 本机回环地址的 webhook 路径不是密钥（测试断言、文档示例常见）
+            if label.startswith("webhook url") and re.search(r"://(127\.0\.0\.1|localhost|\[::1\])\b", line):
+                continue
+            hits.append(f"{name}:{lineno}: {label}: {line.strip()[:120]}")
     return hits
 
 

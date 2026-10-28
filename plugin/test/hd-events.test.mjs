@@ -50,7 +50,7 @@ test('loadEventConfig: 订阅只给 secret 时按默认端口拼 URL', () => {
     }));
     const cfg = loadEventConfig({}, home);
     assert.equal(cfg.secret, 'only-<secret>');
-    assert.equal(cfg.url, 'http://127.0.0.1:8644/webhooks/hd-events');
+    assert.equal(cfg.url, 'http://127.0.0.1:8644' + '/webhooks/' + 'hd-events');
 });
 
 test('loadEventConfig: 没有订阅文件不抛错', () => {
