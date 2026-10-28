@@ -6,7 +6,7 @@
  *   收 {"kind":"exec","id":"<uuid>","task":"..."}
  *   跑 `dsh headless "<task>"`（一次性、无交互、取 stdout）
  *   回 {"kind":"exec_result","id":...,"ok":true,"text":"..."} 给发起方
- *   同时（可选）POST Hermes webhook（订阅名 from-phone）→ 企业微信推送，零 LLM 成本
+ *   同时（可选）POST Hermes webhook（订阅名 from-phone）→ IM 推送（企业微信/飞书/Slack 皆可），零 LLM 成本
  *
  * 为什么用 headless：DSH 没有对外的任务 API，Web UI 只有带 token 的页面；`dsh headless` 是官方
  * 的一次性入口，输出就是最终答复，适合机器调用。
@@ -62,7 +62,7 @@ function popup(text) {
         console.error('[phone-agent] toast 未确认：' + body.slice(0, 160));
 }
 
-function pushWeCom(link, text, meta) {
+function pushIM(link, text, meta) {
     // 微信推送走 relay 回投 server：本机 relay_client 按 peer_routes 把它投到 from-phone 订阅，
     // 这样手机端不需要任何公网入口，也不用把 webhook secret 落到手机上。
     link.send('server', { kind: 'notify', message: text, ...meta }).catch((e) => {
@@ -150,7 +150,7 @@ export function apply(ctx) {
         const timeoutMs = (Number(p.timeout_s) || 900) * 1000;
         console.error('[phone-agent] 收到任务 id=' + id + ' 长度=' + task.length);
         popup('📥 Hermes 任务：' + task);
-        pushWeCom(link, '📥 手机已收到任务（' + task.length + ' 字），开始执行…' + task.slice(0, 60), { ok: true, ack: true });
+        pushIM(link, '📥 手机已收到任务（' + task.length + ' 字），开始执行…' + task.slice(0, 60), { ok: true, ack: true });
         queue = queue.then(async () => {
             const r = await runDsh(task, timeoutMs);
             try {
@@ -161,7 +161,7 @@ export function apply(ctx) {
                 console.error('[phone-agent] 回投失败：' + String(e && e.message || e));
             }
             popup((r.ok ? '✅ ' : '❌ ') + r.text);
-            pushWeCom(link, r.text.slice(0, 3500), { task: task.slice(0, 200), ok: r.ok });
+            pushIM(link, r.text.slice(0, 3500), { task: task.slice(0, 200), ok: r.ok });
         }).catch((e) => console.error('[phone-agent] 队列异常：' + String(e && e.message || e)));
     });
     console.error('[phone-agent] 已启动：等待 exec 任务（client=' + link.cfg.client + '）');

@@ -2,7 +2,7 @@
 """dsh_phone — 从本机把任务交给手机上的 DSH 跑，并把结果取回来。
 
 方向 B（Hermes → 手机 DSH）的本机客户端。手机端由 `phone-agent` 插件接收：
-它跑 `dsh headless "<task>"`，结果回投给本进程，同时（如果配了 webhook）推企业微信。
+它跑 `dsh headless "<task>"`，结果回投给本进程，同时（如果配了 webhook）推 IM。
 
 用法：
   dsh_phone.py "把手机屏幕截图存到 /sdcard/Download 并读一下电量"
