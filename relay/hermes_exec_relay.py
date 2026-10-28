@@ -74,8 +74,11 @@ SUBS_PATH = HOME / ".hermes/webhook_subscriptions.json"
 WEBHOOK_BASE = os.environ.get("HERMES_WEBHOOK_BASE") or "http://127.0.0.1:8644"
 
 
-def notify_wecom(text: str):
-    """回执推企业微信：走本机 webhook 的 from-phone 订阅（deliver_only，不过 LLM，零 token）。"""
+def notify_im(text: str):
+    """回执推 IM：走本机 webhook 的 from-phone 订阅（deliver_only，不过 LLM，零 token）。
+
+    Hermes 侧把该订阅接到企业微信 / 飞书 / Slack 均可，这里只负责把文本送进 webhook。
+    """
     try:
         import hashlib
         import hmac
@@ -90,7 +93,7 @@ def notify_wecom(text: str):
             WEBHOOK_BASE + "/webhooks/from-phone", data=body,
             headers={"Content-Type": "application/json", "X-Hub-Signature-256": sig})
         with urllib.request.urlopen(req, timeout=20) as r:
-            log("[notify] wecom %s" % r.status)
+            log("[notify] im %s" % r.status)
     except Exception as e:  # noqa: BLE001
         log("[notify] FAIL %s" % e)
 
@@ -152,14 +155,14 @@ def worker():
                  {"kind": "result", "id": rid, "ok": False, "text": "空任务，未执行"})
             continue
         log("[job] id=%s from=%s session=%s len=%d" % (rid, job.get("from"), payload.get("session"), len(task)))
-        notify_wecom("📥 收到手机任务（%d 字）：%s" % (len(task), task[:80].replace("\n", " ")))
+        notify_im("📥 收到手机任务（%d 字）：%s" % (len(task), task[:80].replace("\n", " ")))
         ok, text, ms = run_hermes(task, str(payload.get("session") or ""),
                                   int(payload.get("timeout_s") or DEFAULT_TIMEOUT))
         reply = job.get("from") or "phone"
         sent = send(cfg, reply, {"kind": "result", "id": rid, "ok": ok, "text": text,
                                  "elapsed_ms": ms, "mine": "server"})
         log("[job] id=%s ok=%s %ss chars=%d sent=%s" % (rid, ok, ms, len(text), sent))
-        notify_wecom("%s（%ss）：%s" % ("📤 答复" if ok else "⚠️ 执行失败", ms,
+        notify_im("%s（%ss）：%s" % ("📤 答复" if ok else "⚠️ 执行失败", ms,
                                        text[:500].replace("\n", " ")))
 
 
