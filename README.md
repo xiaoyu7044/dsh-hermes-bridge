@@ -35,6 +35,13 @@
 
 分支 `hd` 另有：本机 DSH（HD）事件监控插件 `hd-events`、ACP 双向调用客户端、HD 集成说明。
 
+| 分支 | 插件版本 | 内容 |
+|---|---|---|
+| `main` | 0.5.5 | call_hermes（local/relay）+ phone-agent |
+| `hd` | 0.6.0 | 上面全部 + hd-events 会话监控 + ACP 客户端 |
+
+npm 的 `latest` 跟 `hd` 分支走（`npm i dsh-hermes-bridge@0.6.0`）。
+
 ## 三步跑起来
 
 ### 1. Hermes 侧：起执行器

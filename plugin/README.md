@@ -31,6 +31,10 @@ dsh plugin --profile <profile> add git+https://github.com/<you>/hermes-bridge.gi
 dsh --profile <profile> --dump-config | grep -E "hermes-bridge|phone-agent"
 ```
 
+> npm 上的 `latest` 是 0.6.x（含 `hd-events`）。如果 `dsh plugin add dsh-hermes-bridge`
+> 装到了旧版，是 pnpm 11 的 `minimumReleaseAge` 在挑「发布满 N 天」的版本——显式写版本号：
+> `dsh plugin --profile <profile> add dsh-hermes-bridge@0.6.0`。
+>
 > `cordis.patch.yml` 里用的是**模块标识符**（`dsh-hermes-bridge`、`dsh-hermes-bridge/phone-agent.js`），
 > 不是绝对路径——绝对路径只适合手工拷贝，换机器就废。
 
