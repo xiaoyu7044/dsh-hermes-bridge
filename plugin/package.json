@@ -30,5 +30,17 @@
   ],
   "scripts": {
     "test": "node --test test/hd-events.test.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiaoyu7044/dsh-hermes-bridge.git",
+    "directory": "plugin"
+  },
+  "homepage": "https://github.com/xiaoyu7044/dsh-hermes-bridge#readme",
+  "bugs": {
+    "url": "https://github.com/xiaoyu7044/dsh-hermes-bridge/issues"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
