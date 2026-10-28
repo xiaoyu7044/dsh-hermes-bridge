@@ -194,7 +194,7 @@ if [ "$SKIP_VERIFY" -eq 0 ]; then
     for i in $(seq 1 20); do
         V="$(npm view "$PKG_NAME" version 2>/dev/null || true)"
         if [ "$V" = "$NEW_VER" ]; then
-            ok "latest = $V（${i}0s 内生效）"
+            ok "latest = $V（$((i*30))s 内生效）"
             break
         fi
         printf '  … latest=%s（%ss）\n' "${V:-未知}" "$((i*30))"
