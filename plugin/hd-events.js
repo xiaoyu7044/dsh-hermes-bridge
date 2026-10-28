@@ -25,7 +25,6 @@ import { watch, readFileSync, writeFileSync, existsSync, unlinkSync, statSync, r
 import { createHmac } from 'node:crypto';
 import { homedir, tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { getLink } from './relay.js';
 
 export const name = 'hd-events';
 
@@ -79,7 +78,7 @@ export function scanLatestMtime(dir, depth = 0) {
 }
 
 /** 读配置：订阅文件优先，其次环境变量 */
-export function loadEventConfig(env = process.env, home = homedir()) {
+export function loadEventConfig(env = process.env, home = homedir(), subName = 'hd-events') {
     const out = {
         url: env.HD_EVENT_URL || '',
         secret: env.HD_EVENT_SECRET || '',
@@ -88,10 +87,13 @@ export function loadEventConfig(env = process.env, home = homedir()) {
         return out;
     try {
         const p = join(env.HERMES_HOME || join(home, '.hermes'), 'webhook_subscriptions.json');
-        const sub = findSubscription(JSON.parse(readFileSync(p, 'utf8')));
+        const sub = findSubscription(JSON.parse(readFileSync(p, 'utf8')), subName);
         if (sub) {
-            out.url = out.url || sub.url || sub.webhook_url || '';
             out.secret = out.secret || sub.secret || '';
+            // Hermes 的订阅文件通常只写 secret，路由名就是 URL 末段；不写 url 时按默认端口拼出来，
+            // 否则会误判成「没有 webhook」而静默降级（本地实测踩过）。
+            out.url = out.url || sub.url || sub.webhook_url
+                || (out.secret ? (env.HERMES_WEBHOOK_BASE || 'http://127.0.0.1:8644') + '/webhooks/' + (sub.name || subName) : '');
         }
     }
     catch { /* 没有订阅文件就走 relay / 日志 */ }
@@ -124,17 +126,18 @@ export function apply(ctx) {
     const ev = loadEventConfig();
     // relay 兜底：hd-events 复用 hermes-bridge 的连接（同一份 ~/.dsh/hermes-bridge.json）
     let link = null;
-    const relayNotify = (text) => {
+    // relay 兜底：动态 import，缺 relay.js / 缺配置都不影响本插件加载
+    const relayNotify = async (text) => {
         try {
             if (!link) {
-                // 没有 relay 配置时 getLink 会抛错，由下面的 catch 兜底（不影响 webhook 通道）
-                link = getLink();
+                const mod = await import('./relay.js');
+                link = mod.getLink();
                 link.start();
             }
-            return link.send(link.cfg.peer, { kind: 'notify', message: text });
+            return await link.send(link.cfg.peer, { kind: 'notify', message: text });
         }
         catch {
-            return Promise.resolve(false);
+            return false;
         }
     };
 

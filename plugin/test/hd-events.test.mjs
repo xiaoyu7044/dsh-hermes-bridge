@@ -42,6 +42,17 @@ test('loadEventConfig: 环境变量优先于订阅文件', () => {
     assert.equal(fromEnv.secret, 'env-<secret>');
 });
 
+test('loadEventConfig: 订阅只给 secret 时按默认端口拼 URL', () => {
+    const home = mkdtempSync(join(tmpdir(), 'hd-events-'));
+    mkdirSync(join(home, '.hermes'), { recursive: true });
+    writeFileSync(join(home, '.hermes', 'webhook_subscriptions.json'), JSON.stringify({
+        'hd-events': { secret: 'only-<secret>', deliver: 'log' },
+    }));
+    const cfg = loadEventConfig({}, home);
+    assert.equal(cfg.secret, 'only-<secret>');
+    assert.equal(cfg.url, 'http://127.0.0.1:8644/webhooks/hd-events');
+});
+
 test('loadEventConfig: 没有订阅文件不抛错', () => {
     const home = mkdtempSync(join(tmpdir(), 'hd-events-'));
     assert.deepEqual(loadEventConfig({}, home), { url: '', secret: '' });
