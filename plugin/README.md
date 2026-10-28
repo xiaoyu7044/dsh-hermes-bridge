@@ -31,6 +31,10 @@ dsh plugin --profile <profile> add git+https://github.com/<you>/hermes-bridge.gi
 dsh --profile <profile> --dump-config | grep -E "hermes-bridge|phone-agent"
 ```
 
+> npm 上的 `latest` 是 0.6.x（含 `hd-events`）。如果 `dsh plugin add dsh-hermes-bridge`
+> 装到了旧版，是 pnpm 11 的 `minimumReleaseAge` 在挑「发布满 N 天」的版本——显式写版本号：
+> `dsh plugin --profile <profile> add dsh-hermes-bridge@0.6.0`。
+>
 > `cordis.patch.yml` 里用的是**模块标识符**（`dsh-hermes-bridge`、`dsh-hermes-bridge/phone-agent.js`），
 > 不是绝对路径——绝对路径只适合手工拷贝，换机器就废。
 
@@ -104,6 +108,15 @@ call_hermes(task: "…", session: "triage")      // 需要 Hermes 侧持久会�
 | 手机 guest 里 `unzip: command not found` | 精简 rootfs 未装 unzip | `python3 -c "import zipfile;zipfile.ZipFile('x.zip').extractall('dir')"` |
 | 调用立刻返回「执行超时（1s）」 | `timeout_s`（秒）被当成毫秒用 | 已在 0.5.4 修复：`Math.round(secs * 1000)` |
 | `INVALID_REQUEST` 来自工具参数 | DSH 的 `defineTool.parameters` 必须是 `type:'object'` + `properties` + `required:[]` 数组 | 按 JSON Schema 写 |
+
+## hd-events（分支 `hd`）
+
+监控本机 HD 的会话文件，判定「在干活 / 卡住 / 缓过来」，事件走 webhook（HMAC）或 relay 推给你。
+纯空闲不告警。详见 `docs/hd-integration.md`。
+
+```sh
+HD_STALL_MIN=20 HD_HEARTBEAT_MIN=0 dsh --profile <profile>
+```
 
 ## 许可
 

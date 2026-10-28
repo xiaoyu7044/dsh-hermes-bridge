@@ -22,6 +22,9 @@ jobs:
             node --check "$f" || exit 1
           done
 
+      - name: Plugin tests
+        run: node --test plugin/test/hd-events.test.mjs
+
       - name: Python compile
         run: |
           python3 -m compileall -q relay tools

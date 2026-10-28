@@ -4,5 +4,7 @@
 - insert:
     - id: hermes-bridge
       name: 'dsh-hermes-bridge'
+    - id: hd-events
+      name: 'dsh-hermes-bridge/hd-events.js'
     - id: phone-agent
       name: 'dsh-hermes-bridge/phone-agent.js'
