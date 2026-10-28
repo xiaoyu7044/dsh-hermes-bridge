@@ -1,0 +1,6 @@
+{
+  "_comment": "复制为 ~/.hermes/relay/client_server_exec.json，chmod 600。token 不要进版本库。",
+  "relay_url": "https://relay.example.com:8843",
+  "client_id": "server-exec",
+  "token": "<this client's token>"
+}

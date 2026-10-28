@@ -1,0 +1,8 @@
+{
+  "_comment": "复制到 ~/.dsh/hermes-bridge.json。真实 token 不要提交、不要进备份。",
+  "relay_url": "https://<your-relay-host>:8843",
+  "token": "<this client's token>",
+  "client_id": "phone",
+  "peer": "server-exec",
+  "dsh_bin": "dsh"
+}

@@ -1,0 +1,8 @@
+# dsh-hermes-bridge bundle patch —— 插件挂在同一个包里
+# name 是「从 profile 的 node_modules 解析」的模块标识符（bare 名 = 包主入口，
+# 子路径 = 包内文件）。不要写绝对路径，那是手工拷贝安装时的写法，换机器就废。
+- insert:
+    - id: hermes-bridge
+      name: 'dsh-hermes-bridge'
+    - id: phone-agent
+      name: 'dsh-hermes-bridge/phone-agent.js'

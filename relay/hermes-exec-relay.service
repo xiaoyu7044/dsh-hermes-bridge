@@ -1,0 +1,17 @@
+[Unit]
+Description=Hermes relay executor (serves dsh-hermes-bridge call_hermes from phone/remote clients)
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/<user>
+Environment=PATH=/home/<user>/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=HERMES_BIN=/home/<user>/.local/bin/hermes
+ExecStart=/home/<user>/.hermes/hermes-agent/venv/bin/python /home/<user>/.hermes/relay/hermes_exec_relay.py
+Restart=always
+RestartSec=5
+StandardOutput=append:/home/<user>/.hermes/logs/exec-relay.out.log
+StandardError=append:/home/<user>/.hermes/logs/exec-relay.out.log
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,30 @@
+{
+  "name": "dsh-hermes-bridge",
+  "version": "0.5.5",
+  "description": "DeepSeek Harness (DSH) ↔ Hermes Agent bridge: call_hermes tool (local exec or cloud relay) + phone-agent remote executor",
+  "type": "module",
+  "main": "hermes-bridge.js",
+  "files": [
+    "hermes-bridge.js",
+    "relay.js",
+    "phone-agent.js",
+    "cordis.patch.yml",
+    "hermes-bridge.example.json",
+    "README.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "license": "MIT",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "hermes",
+    "agent",
+    "acp",
+    "cordis",
+    "relay"
+  ]
+}
